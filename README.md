@@ -4,6 +4,12 @@ This collector forms part of the Data Insight Platform. It collects the
 latest content for the leader for the public dashboard and broadcasts
 that message on a message bus.
 
+## Key
+
+The key for the topic exchange that this collector broadcasts to is:
+
+    googledrive.leader
+
 ## Format
 
 The message is JSON and follows the following strcuture.
