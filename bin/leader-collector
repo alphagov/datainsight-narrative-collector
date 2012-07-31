@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'gli'
 
-require_relative '../src/leader'
+require_relative '../lib/leader'
 
 include GLI
 

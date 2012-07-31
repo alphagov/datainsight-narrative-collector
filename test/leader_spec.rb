@@ -1,5 +1,5 @@
 require 'bunny'
-require_relative '../src/leader'
+require_relative '../lib/leader'
 require_relative 'spec_helper'
 
 describe "a leader collector" do
