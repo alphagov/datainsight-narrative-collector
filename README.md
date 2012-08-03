@@ -1,14 +1,14 @@
 ## About
 
 This collector forms part of the Data Insight Platform. It collects the
-latest content for the leader for the public dashboard and broadcasts
+latest content for the narrative for the public dashboard and broadcasts
 that message on a message bus.
 
 ## Key
 
 The key for the topic exchange that this collector broadcasts to is:
 
-    googledrive.leader
+    googledrive.narrative
 
 ## Format
 
@@ -17,7 +17,7 @@ The message is JSON and follows the following strcuture.
     {
       "envelope":{
         "collected_at":"2012-07-31T10:46:25+01:00",
-        "collector":"leader"
+        "collector":"narrative"
        },
        "payload":{
           "content":"Some content of interest went up 20%",
@@ -40,14 +40,14 @@ overridden with the AMQP environment variable.
 The first run requires the Oauth token from Google for the given
 application. Once you have that you can run:
 
-    bundle exec bin/leader-collector --token={auth token from Google} print
+    bundle exec bin/narrative-collector --token={auth token from Google} print
 
 Following runs just require the following, as the refresh token will
 have been stored. Repassing the original auth token will fail as it's
 now invalid.
 
-    bundle exec bin/leader-collector print
+    bundle exec bin/narrative-collector print
 
 Full help details can be found with:
 
-    bundle exec bin/leader-collector help
+    bundle exec bin/narrative-collector help

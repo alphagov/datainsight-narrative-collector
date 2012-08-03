@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'gli'
 
-require_relative '../lib/leader'
+require_relative '../lib/narrative'
 
 include GLI
 
@@ -19,14 +19,14 @@ flag [:t,:token]
 desc 'Print out the collected content'
 command :print do |c|
   c.action do |global_options, options, args|
-    puts Collectors::LeaderCollector.new(global_options[:token]).print 
+    puts Collectors::NarrativeCollector.new(global_options[:token]).print
   end
 end
 
 desc 'Publish the collected content to the queue'
 command :broadcast do |c|
   c.action do |global_options, options, args|
-    Collectors::LeaderCollector.new(global_options[:token]).broadcast
+    Collectors::NarrativeCollector.new(global_options[:token]).broadcast
   end
 end
 

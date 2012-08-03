@@ -11,7 +11,7 @@ require 'oauth2'
 require_relative 'google_authentication'
 
 module Collectors
-  class LeaderCollector
+  class NarrativeCollector
 
     def initialize(authorization_code=nil)
       @authorization_code = authorization_code
@@ -25,7 +25,7 @@ module Collectors
       client = Bunny.new ENV['AMQP']
       client.start
       exchange = client.exchange("datainsight", :type => :topic)
-      exchange.publish(response.to_json, :key => 'googledrive.leader')
+      exchange.publish(response.to_json, :key => 'googledrive.narrative')
       client.stop
     end
 
@@ -33,7 +33,7 @@ module Collectors
       {
         :envelope => {
           :collected_at => DateTime.now,
-          :collector => "leader",
+          :collector => "narrative",
         },
         :payload => {
           :content => content,
@@ -46,7 +46,7 @@ module Collectors
       {
         :envelope => {
           :collected_at => DateTime.now,
-          :collector => "leader",
+          :collector => "narrative",
         },
         :payload => {
           :error => message

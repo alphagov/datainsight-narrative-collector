@@ -1,10 +1,10 @@
 require 'bunny'
-require_relative '../lib/leader'
+require_relative '../lib/narrative'
 require_relative 'spec_helper'
 
-describe "a leader collector" do
+describe "a narrative collector" do
   before(:each) do
-    @collector = Collectors::LeaderCollector.new
+    @collector = Collectors::NarrativeCollector.new
   end
 
   it "when printed should contains a valid JSON document" do
@@ -24,7 +24,7 @@ describe "a leader collector" do
     @collector.stubs(:response)
 
     exchange= mock('exchange')
-    exchange.expects(:publish).with("null", :key => 'googledrive.leader')
+    exchange.expects(:publish).with("null", :key => 'googledrive.narrative')
 
     rabbit = mock('bunny')
     rabbit.expects(:start)
