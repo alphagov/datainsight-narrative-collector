@@ -11,22 +11,22 @@ program_desc 'Collect the content for the masthead'
 
 version 0.1
 
-desc 'For the first request you need to pass in the authorisation token'
+desc 'For the first request you need to pass in the authorisation code'
 default_value nil
-arg_name 'oauth token'
-flag [:t,:token]
+arg_name 'authorisation code'
+flag [:a,:authorisation_code]
 
 desc 'Print out the collected content'
 command :print do |c|
   c.action do |global_options, options, args|
-    puts Collectors::NarrativeCollector.new(global_options[:token]).print
+    puts Collectors::NarrativeCollector.new(global_options[:authorisation_code]).print
   end
 end
 
 desc 'Publish the collected content to the queue'
 command :broadcast do |c|
   c.action do |global_options, options, args|
-    Collectors::NarrativeCollector.new(global_options[:token]).broadcast
+    Collectors::NarrativeCollector.new(global_options[:authorisation_code]).broadcast
   end
 end
 
