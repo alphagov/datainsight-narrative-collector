@@ -11,4 +11,5 @@ gem "whenever"
 group :test do
   gem "rspec"
   gem "mocha"
+  gem "ci_reporter"
 end
