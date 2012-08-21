@@ -11,8 +11,6 @@ module Collectors
   class NarrativeCollector
 
     API_SCOPE = "https://docs.google.com/feeds/ https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/"
-    GOOGLE_CLIENT_ID = '1054017153726.apps.googleusercontent.com'
-    GOOGLE_CLIENT_SECRET = 'eMFsc8LU3ZGrRFG93WfQCnD3'
 
     def initialize(authorization_code=nil)
       @authorization_code = authorization_code
@@ -68,7 +66,7 @@ module Collectors
 
     def get_worksheet(authorization_code)
       key = ENV['WORKSHEET'] || '0AhRGSTCqlCiqdDNiVXFsdmh6RVV5N1lENE14X3lTcmc'
-      authentication = GoogleAuthenticationBridge::GoogleAuthentication.new(API_SCOPE, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
+      authentication = GoogleAuthenticationBridge::GoogleAuthentication.create_from_config_file(API_SCOPE, '/var/tmp/google_credentials.yml')
       token = authentication.get_oauth2_access_token(authorization_code)
       session = GoogleDrive.login_with_oauth(token)
       session.spreadsheet_by_key(key).worksheets[0]
