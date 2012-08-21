@@ -1,3 +1,11 @@
+GIT
+  remote: git@github.com:alphagov/google-auth-bridge.git
+  revision: 61b3d98bb8139c9ece885ae336619b34c46e583d
+  specs:
+    google-auth-bridge (0.0.1)
+      google-api-client
+      oauth2
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -80,9 +88,9 @@ DEPENDENCIES
   ci_reporter
   gli
   google-api-client
+  google-auth-bridge!
   google_drive
   mocha
-  oauth2
   rake
   rspec
   whenever
