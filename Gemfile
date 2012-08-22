@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "gli"
+gem "gli", "1.6.0"
 gem "rake"
 gem "bunny"
 gem "google-api-client", :require => 'google/api_client'
