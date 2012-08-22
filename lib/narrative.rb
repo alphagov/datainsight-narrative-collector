@@ -66,10 +66,15 @@ module Collectors
 
     def get_worksheet(authorization_code)
       key = ENV['WORKSHEET'] || '0AhRGSTCqlCiqdDNiVXFsdmh6RVV5N1lENE14X3lTcmc'
-      authentication = GoogleAuthenticationBridge::GoogleAuthentication.create_from_config_file(API_SCOPE, '/var/tmp/google_credentials.yml')
-      token = authentication.get_oauth2_access_token(authorization_code)
+      token = get_google_auth.get_oauth2_access_token(authorization_code)
       session = GoogleDrive.login_with_oauth(token)
       session.spreadsheet_by_key(key).worksheets[0]
+    end
+
+    def get_google_auth
+      GoogleAuthenticationBridge::GoogleAuthentication.create_from_config_file(
+        API_SCOPE, '/etc/gds/google_credentials.yml', "/var/lib/gds/google-drive-token.yml"
+      )
     end
 
   end
