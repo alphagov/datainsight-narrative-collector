@@ -5,6 +5,7 @@ set -e
 ANSI_YELLOW="\033[33m"
 ANSI_RED="\033[31m"
 ANSI_RESET="\033[0m"
+PROJECT_NAME=datainsight-collector-narrative
 
 export VERSION="$1"
 if [ -z "$VERSION" ]; then
@@ -18,14 +19,23 @@ fi
 
 #HOST="deploy@datainsight"
 HOST="deploy@datainsight.alphagov.co.uk"
+# remove older deployments
+clean_old_files() {
+    DIR=$1
+    OLD=$(ssh $HOST "ls -t '$DIR'" | tail -n +2)
+    for file in $OLD; do echo "remove $DIR/$file"; ssh $HOST rm -rf $DIR/$file; done
+}
+clean_old_files /srv/$PROJECT_NAME/release
+clean_old_files /srv/$PROJECT_NAME/packages
 
-scp datainsight-collector-narrative-$VERSION.zip $HOST:/srv/datainsight-collector-narrative/packages
+
+scp $PROJECT_NAME-$VERSION.zip $HOST:/srv/$PROJECT_NAME/packages/$PROJECT_NAME-$VERSION.zip
 # deploy
 echo -e "${ANSI_YELLOW}Deploying package${ANSI_RESET}"
-ssh $HOST "mkdir /srv/datainsight-collector-narrative/release/$VERSION; unzip -o /srv/datainsight-collector-narrative/packages/datainsight-collector-narrative-$VERSION.zip -d /srv/datainsight-collector-narrative/release/$VERSION;"
+ssh $HOST "mkdir /srv/$PROJECT_NAME/release/$VERSION; unzip -o /srv/$PROJECT_NAME/packages/$PROJECT_NAME-$VERSION.zip -d /srv/$PROJECT_NAME/release/$VERSION;"
 # link
 echo -e "${ANSI_YELLOW}Linking package${ANSI_RESET}"
-ssh $HOST "rm /srv/datainsight-collector-narrative/current; ln -s /srv/datainsight-collector-narrative/release/$VERSION/ /srv/datainsight-collector-narrative/current;"
+ssh $HOST "rm /srv/$PROJECT_NAME/current; ln -s /srv/$PROJECT_NAME/release/$VERSION/ /srv/$PROJECT_NAME/current;"
 # restart
 echo -e "${ANSI_YELLOW}Updating crontab${ANSI_RESET}"
-ssh $HOST "cd /srv/datainsight-collector-narrative/current; ./start.sh"
+ssh $HOST "cd /srv/$PROJECT_NAME/current; ./start.sh"
