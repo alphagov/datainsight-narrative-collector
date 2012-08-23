@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:alphagov/google-auth-bridge.git
-  revision: 70cab3ab84c5fbf3d542a24af442c9c1734443d2
+  revision: 6ea70353cd0e21e48bb3577a6e77686b76918897
   specs:
     google-auth-bridge (0.0.2)
       google-api-client
