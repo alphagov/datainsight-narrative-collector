@@ -7,6 +7,8 @@ require 'bunny'
 require 'json'
 require 'google_drive'
 
+Datainsight::Logging.configure()
+
 module Collectors
   class NarrativeCollector
 
@@ -17,51 +19,43 @@ module Collectors
     end
 
     def print
-      response.to_json
+      begin
+        response.to_json
+      rescue => e
+        logger.error { e }
+      end
     end
 
     def broadcast
-      client = Bunny.new ENV['AMQP']
-      client.start
-      exchange = client.exchange("datainsight", :type => :topic)
-      exchange.publish(response.to_json, :key => 'googledrive.narrative')
-      client.stop
+      begin
+        client = Bunny.new ENV['AMQP']
+        client.start
+        exchange = client.exchange("datainsight", :type => :topic)
+        exchange.publish(response.to_json, :key => 'googledrive.narrative')
+        client.stop
+      rescue => e
+        logger.error { e }
+      end
     end
 
     def create_message(content, author)
       {
-        :envelope => {
-          :collected_at => DateTime.now,
-          :collector => "narrative",
-        },
-        :payload => {
-          :content => content,
-          :author => author,
-        }
-      }
-    end
-
-    def create_exception_message(message, current_date)
-      {
-        :envelope => {
-          :collected_at => DateTime.now,
-          :collector => "narrative",
-        },
-        :payload => {
-          :error => message
-        }
+          :envelope => {
+              :collected_at => DateTime.now,
+              :collector => "narrative",
+          },
+          :payload => {
+              :content => content,
+              :author => author,
+          }
       }
     end
 
     private
     def response
-      begin
-        worksheet = get_worksheet(@authorization_code)
-        row = worksheet.rows.find_all { |item| item.first == "live" }.last
-        create_message(row[3], row[2])
-      rescue Exception => e
-        create_exception_message(e.message, Date.today)
-      end
+      worksheet = get_worksheet(@authorization_code)
+      row = worksheet.rows.find_all { |item| item.first == "live" }.last
+      create_message(row[3], row[2])
     end
 
     def get_worksheet(authorization_code)
@@ -73,7 +67,7 @@ module Collectors
 
     def get_google_auth
       GoogleAuthenticationBridge::GoogleAuthentication.create_from_config_file(
-        API_SCOPE, '/etc/gds/google_credentials.yml', "/var/lib/gds/google-drive-token.yml"
+          API_SCOPE, '/etc/gds/google_credentials.yml', "/var/lib/gds/google-drive-token.yml"
       )
     end
 

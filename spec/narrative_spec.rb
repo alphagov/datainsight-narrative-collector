@@ -8,11 +8,13 @@ describe "a narrative collector" do
   end
 
   it "when printed should contains a valid JSON document" do
+    @collector.stub(:response).and_return(@collector.create_message("message", "bob"))
+
     JSON.parse(@collector.print).keys.should == ["envelope", "payload"]
   end
 
   it "when printed should return the correct message" do
-    @collector.stubs(:response).returns(@collector.create_message("message", "bob"))
+    @collector.stub(:response).and_return(@collector.create_message("message", "bob"))
 
     payload = JSON.parse(@collector.print)["payload"]
 
@@ -20,17 +22,24 @@ describe "a narrative collector" do
     payload["author"].should == "bob"
   end
 
+  it "should log an error, if message cannot be created" do
+    @collector.stub(:response).and_raise("Error!")
+    Logging.logger[@collector].should_receive(:error)
+
+    @collector.print
+  end
+
   it "when broadcast should connect to the exchange correctly" do
-    @collector.stubs(:response)
+    @collector.stub(:response)
 
     exchange= mock('exchange')
-    exchange.expects(:publish).with("null", :key => 'googledrive.narrative')
+    exchange.should_receive(:publish).with("null", :key => 'googledrive.narrative')
 
     rabbit = mock('bunny')
-    rabbit.expects(:start)
-    rabbit.expects(:stop)
-    rabbit.expects(:exchange).with('datainsight', :type => :topic).returns exchange
-    Bunny.expects(:new).returns rabbit
+    rabbit.should_receive(:start)
+    rabbit.should_receive(:stop)
+    rabbit.should_receive(:exchange).with('datainsight', :type => :topic).and_return exchange
+    Bunny.should_receive(:new).and_return rabbit
 
     @collector.broadcast
   end
