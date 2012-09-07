@@ -1,10 +1,11 @@
-def cron_command
-  root_path = File.expand_path(File.dirname(__FILE__) + "/../")
+root_path = File.expand_path(File.dirname(__FILE__) + "/../")
+set :output, {
+    :standard => "#{root_path}/log/cron.out.log",
+    :error => "#{root_path}/log/cron.err.log"
+}
+job_type :collector, "cd :path && RACK_ENV=:environment bundle exec bin/collector :task :output"
 
-  "cd #{root_path} && RACK_ENV=production bundle exec bin/collector broadcast" +
-      " >> #{root_path}/log/cron.out.log 2>> #{root_path}/log/cron.err.log"
-end
 
 every :hour do
-  command cron_command
+  collector "broadcast", :environment => 'production'
 end
