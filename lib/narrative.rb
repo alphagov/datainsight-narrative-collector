@@ -28,11 +28,13 @@ module Collectors
 
     def broadcast
       begin
+        logger.info { "Starting to collect narrative ..." }
         client = Bunny.new ENV['AMQP']
         client.start
         exchange = client.exchange("datainsight", :type => :topic)
         exchange.publish(response.to_json, :key => 'googledrive.narrative')
         client.stop
+        logger.info { "Collected the narrative." }
       rescue => e
         logger.error { e }
       end
