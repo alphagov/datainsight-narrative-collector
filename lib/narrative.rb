@@ -69,7 +69,9 @@ module Collectors
 
     def get_google_auth
       GoogleAuthenticationBridge::GoogleAuthentication.create_from_config_file(
-          API_SCOPE, '/etc/gds/google_credentials.yml', "/var/lib/gds/google-drive-token.yml"
+          API_SCOPE,
+          "/etc/govuk/datainsight/google_credentials.yml",
+          "/var/lib/govuk/datainsight/google-drive-token.yml"
       )
     end
 
