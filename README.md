@@ -1,3 +1,5 @@
+# THIS PROJECT IS DEPRECATED!
+
 ## About
 
 This collector forms part of the Data Insight Platform. It collects the
